@@ -1,9 +1,26 @@
-import { of } from 'rxjs'; 
-import { map } from 'rxjs/operators';
+import { of, observable, Observable } from 'rxjs'; 
+import { map, timeInterval } from 'rxjs/operators';
+
+const sequencegenerator=new Observable<number>((observer)=>{
+let count:number=0;
+
+setInterval(()=>{
+  count=count+1;
+  observer.next(count);
+},1000)
+
+return{unsubscribe()
+{
+  count=0;
+}}
+  
+})
+
+let subscription=sequencegenerator.subscribe((seq)=>{
+  console.log(seq);
+},err=>{})
 
 
-const source = of('World').pipe(
-  map(x => `Hello ${x}!`)
-);
-
-source.subscribe(x => console.log(x));
+setTimeout(()=>{
+  subscription.unsubscribe();
+},6000);
